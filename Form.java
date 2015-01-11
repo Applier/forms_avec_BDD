@@ -1,7 +1,7 @@
 /**
  * 
  */
-package intergiciels.forms;
+package intergiciels.etc;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  */
 
-public class SignupForm {
+public class Form {
 	
 	/**
 	 * Retourne null si un champ est vide, et son contenu sinon

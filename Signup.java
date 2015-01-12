@@ -32,10 +32,10 @@ public class Signup extends HttpServlet {
 	
 	public static final String VUE = "/WEB-INF/signup.jsp";
 	public static final String ATTRIBUT_MAIL = "mail";
-    public static final String ATTRIBUT_FORM = "form";
-    public static final String ATTRIBUT_ERREUR = "erreur";
-    public static final String ATTRIBUT_SESSION_ID = "id";
-    public static final String ATTRIBUT_SESSION_USER = "sessionUser";
+    	public static final String ATTRIBUT_FORM = "form";
+    	public static final String ATTRIBUT_ERREUR = "erreur";
+    	public static final String ATTRIBUT_SESSION_ID = "id";
+    	public static final String ATTRIBUT_SESSION_USER = "sessionUser";
   
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -64,9 +64,10 @@ public class Signup extends HttpServlet {
        	/* Récupération de la session depuis la requête */           
         HttpSession session = request.getSession();
 				
-        /* Récuération des champs du formulaire */
+        /* Récupération des champs du formulaire */
 		String mail = form.getValeurChamp(request, "mail");
 		String password = form.getValeurChamp(request, "password");
+		String confirmation = form.getValeurChamp(request, "confirmation");
 		   
 
 		User user = new User();
@@ -80,13 +81,26 @@ public class Signup extends HttpServlet {
         request.setAttribute(ATTRIBUT_FORM, form);
         request.setAttribute(ATTRIBUT_MAIL, mail);
 	    
+   
+        
+        
         /* Appel au traitement et à la validation de la requête, et récupération du bean en résultant */
-        //User user = form.inscrireUser(request,facade);
         if (!facade.userPresent(mail)) {
+        	if (password == null || password.length()<5) {
+        		request.setAttribute(ATTRIBUT_ERREUR, "Echec de l'inscription : votre mot de passe doit avoir au moins 5 caractères !");
+            	this.getServletContext().getRequestDispatcher(VUE).forward(request,response); 
+        	}
+        	else if (confirmation == null || !password.equals(confirmation)) {
+        		request.setAttribute(ATTRIBUT_ERREUR, "Echec de l'inscription : vos mots de passe ne sont pas identiques !");
+            	this.getServletContext().getRequestDispatcher(VUE).forward(request,response);
+        		
+        	}
+        	else {
         	facade.ajoutUser(mail, password);
         	session.setAttribute(ATTRIBUT_SESSION_ID, mail);
         	session.setAttribute(ATTRIBUT_SESSION_USER, user);
         	this.getServletContext().getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+        	}
         } 
         else {
         	request.setAttribute(ATTRIBUT_ERREUR, "Echec de l'inscription : cet email est déjà associé à un compte !");
